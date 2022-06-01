@@ -38,10 +38,10 @@ This is an app to search small local restaurants and give them reviews.
 | `/login`                          | LoginPage             | anon only `<AnonRoute>`     | Login form, navigates to home page after login.   |
 | `/signup`                         | SignupPage            | anon only `<AnonRoute>`     | Signup form, navigates to home page after signup. |
 | `/profile`                        | ProfilePage           | user only `<PrivateRoute>`  | User profile for the current user.                |
-| `/profile/edit`                   | EditProfilePage       | user only `<PrivateRoute>`  | Edit user profile form.                           |
+| `/profile/edit/:userId`           | EditProfilePage       | user only `<PrivateRoute>`  | Edit user profile form.                           |
 | `/restaurants`                    | RestaurantListPage    | user only `<PrivateRoute>`  | Restaurants list.                                 |
-| `/restaurants/add`                | CreateRestaurantPage  | admin only `<PrivateRoute>` | Create a new restaurant.(admin)                   |
-| `/restaurants/edit/:restaurantId` | EditRestaurantPage    | admin only `<PrivateRoute>` | Edit restaurant (admin).                          |
+| `/restaurants/add`                | CreateRestaurantPage  | admin only `<PrivateRoute>` | Create a new restaurant.                          |
+| `/restaurants/edit/:restaurantId` | EditRestaurantPage    | admin only `<PrivateRoute>` | Edit restaurant.                                  |
 | `/restaurants/:restaurantId`      | RestaurantDetailsPage | user only `<PrivateRoute>`  | Restaurant details. Shows info about restaurants. |
 
 ## Components
@@ -131,22 +131,31 @@ timestamps: true
 | HTTP Method | URL                              | Request Body                                                                         | Success status | Error Status | Description                                                                                                                     |
 | ----------- | -------------------------------- | ------------------------------------------------------------------------------------ | -------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------- |
 | GET         | `/auth/profile `                 | Saved session                                                                        | 200            | 404          | Check if user is logged in and return profile page                                                                              |
-| GET         | `/auth/profile/:userId/edit `    | Saved session                                                                        | 200            | 404          | Edit profile page                                                                                                               |
-| POST        | `/auth/profile/:userId/edit `    | {name, imageProfile}                                                                 | 200            | 404          | Updates user profile                                                                                                            |
+| GET         | `/auth/profile/edit/:userId `    | Saved session                                                                        | 200            | 404          | Edit profile page                                                                                                               |
+| POST        | `/auth/profile/edit/:userId `    | {name, imageProfile}                                                                 | 200            | 404          | Updates user profile                                                                                                            |
 | POST        | `/auth/signup`                   | {name, email, password}                                                              | 201            | 404          | Checks if fields not empty (422) and user not exists (409), then create user with encrypted password, and store user in session |
 | POST        | `/auth/login`                    | {email, password}                                                                    | 200            | 401          | Checks if fields not empty (422), if email exists (404), and if password matches (404), then stores user in session             |
 | POST        | `/auth/logout`                   |                                                                                      | 204            | 400          | Logs out the user                                                                                                               |
 | GET         | `/api/restaurants`               |                                                                                      |                | 400          | Show all restaurants                                                                                                            |
 | GET         | `/api/restaurants/:restaurantId` |                                                                                      |                |              | Show specific restaurants                                                                                                       |
 | POST        | `/api/restaurants`               | { name, imageCover, city, contact, address, comments, averagePrice, imageUrl }       | 201            | 400          | Create and save a new restaurant                                                                                                |
-| PUT         | `/api/restaurants/:restaurantId` | { name, imageCover, city, contact, address, comments:[], averagePrice, imageUrl:[] } | 200            | 400          | edit a restaurant                                                                                                               |
-| DELETE      | `/api/restaurants/:restaurantId` |                                                                                      | 201            | 400          | delete a restaurant                                                                                                             |
+| PUT         | `/api/restaurants/:restaurantId` | { name, imageCover, city, contact, address, comments:[], averagePrice, imageUrl:[] } | 200            | 400          | Edit a restaurant                                                                                                               |
+| DELETE      | `/api/restaurants/:restaurantId` |                                                                                      | 201            | 400          | Delete a restaurant from the database                                                                                           |
 
 |
 
 <br>
 
 ## API's
+
+- Cloudinary;
+
+<br>
+
+## Bonus
+
+- random restaurant;
+- suggest a restaurant;
 
 <br>
 
