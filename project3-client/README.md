@@ -34,14 +34,14 @@ This is an app to search small local restaurants and give them reviews.
 
 | Path                              | Component             | Permissions                 | Behavior                                          |
 | --------------------------------- | --------------------- | --------------------------- | ------------------------------------------------- |
+| `/`                               | HomePage              | public `<Route>`            | Home page.                                        |
 | `/login`                          | LoginPage             | anon only `<AnonRoute>`     | Login form, navigates to home page after login.   |
 | `/signup`                         | SignupPage            | anon only `<AnonRoute>`     | Signup form, navigates to home page after signup. |
-| `/`                               | HomePage              | public `<Route>`            | Home page.                                        |
 | `/profile`                        | ProfilePage           | user only `<PrivateRoute>`  | User profile for the current user.                |
 | `/profile/edit`                   | EditProfilePage       | user only `<PrivateRoute>`  | Edit user profile form.                           |
 | `/restaurants`                    | RestaurantListPage    | user only `<PrivateRoute>`  | Restaurants list.                                 |
 | `/restaurants/add`                | CreateRestaurantPage  | admin only `<PrivateRoute>` | Create a new restaurant.(admin)                   |
-| `/restaurants/edit/:restaurantId` | EditRestaurantPage    | user only `<PrivateRoute>`  | Edit restaurant (admin).                          |
+| `/restaurants/edit/:restaurantId` | EditRestaurantPage    | admin only `<PrivateRoute>` | Edit restaurant (admin).                          |
 | `/restaurants/:restaurantId`      | RestaurantDetailsPage | user only `<PrivateRoute>`  | Restaurant details. Shows info about restaurants. |
 
 ## Components
@@ -72,41 +72,8 @@ Components:
 - SearchBar
 - RestaurantListCard
 - RestaurantDetailsCard
-- AddCommentCard
-
-
-
-## Services
-
-- **Auth Service**
-
-  - `authService` :
-    - `.login(user)`
-    - `.signup(user)`
-    - `.logout()`
-    - `.validate()`
-
-- **User Service**
-
-  - `userService` :
-    - `.updateCurrentUser(id, userData)`
-    - `.getCurrentUser()`
-
-- **Tournament Service**
-
-  - `tournamentService` :
-    - `.addTournament(tournamentData)`
-    - `.getTournaments()`
-    - `.getOneTournament(id)`
-    - `.deleteTournament(id)`
-
-- **Player Service**
-
-  - `playerService` :
-    - `.createPlayer(id)`
-    - `.getPlayerDetails(id)`
-
-<br>
+- CommentCard
+- FavouriteRestaurant
 
 # Server / Backend
 
@@ -118,58 +85,64 @@ Components:
 {
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-
-	playerProfile: { type: Schema.Types.ObjectId, ref:'Player' },
-  createdTournaments: [ { type: Schema.Types.ObjectId, ref:'Tournament' } ]
+  imageProfile: { type: String, default: "./src/assets/images"},
+  name: {type: String, required: [true, "Please enter a name"]},
+  role: { type: String, enum: ['admin', 'user'], default: 'user' },
+  favourites  : { type: Schema.Types.ObjectId, ref:'Restaurant' },
+  comments: [ { type: Schema.Types.ObjectId, ref:'Comments' } ]
 }
 ```
 
-**Tournament model**
+**Restaurant model**
 
 ```javascript
  {
    name: { type: String, required: true },
-   img: { type: String },
-   players: [ { type: Schema.Types.ObjectId, ref:'Player' } ],
-   games: [],
-   rankings: []
+   imageCover: { type: String },
+   city: { type: String, required: true },
+   contact: {type:Number},
+   address: { type: String, required: true },
+   comments: [ { type: Schema.Types.ObjectId, ref:'Comments' } ],
+   averagePrice: {type: Number},
+   imageUrl :[{type: String}],
+
  }
 ```
 
-**Player model**
+**Comments model**
 
 ```javascript
 {
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  profileImage: { type: String },
-  scores: []
+
+author: { type: Schema.Types.ObjectId, ref:'User' },
+restaurant: { type: Schema.Types.ObjectId, ref:'Restaurant' },
+content: {type: String},
+},
+{
+timestamps: true
 }
+
 ```
 
 <br>
 
 ## API Endpoints (backend routes)
 
-| HTTP Method | URL                    | Request Body                 | Success status | Error Status | Description                                                                                                                     |
-| ----------- | ---------------------- | ---------------------------- | -------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------- |
-| GET         | `/auth/profile `       | Saved session                | 200            | 404          | Check if user is logged in and return profile page                                                                              |
-| POST        | `/auth/signup`         | {name, email, password}      | 201            | 404          | Checks if fields not empty (422) and user not exists (409), then create user with encrypted password, and store user in session |
-| POST        | `/auth/login`          | {username, password}         | 200            | 401          | Checks if fields not empty (422), if user exists (404), and if password matches (404), then stores user in session              |
-| POST        | `/auth/logout`         |                              | 204            | 400          | Logs out the user                                                                                                               |
-| GET         | `/api/tournaments`     |                              |                | 400          | Show all tournaments                                                                                                            |
-| GET         | `/api/tournaments/:id` |                              |                |              | Show specific tournament                                                                                                        |
-| POST        | `/api/tournaments`     | { name, img, players }       | 201            | 400          | Create and save a new tournament                                                                                                |
-| PUT         | `/api/tournaments/:id` | { name, img, players }       | 200            | 400          | edit tournament                                                                                                                 |
-| DELETE      | `/api/tournaments/:id` |                              | 201            | 400          | delete tournament                                                                                                               |
-| GET         | `/api/players/:id`     |                              |                |              | show specific player                                                                                                            |
-| POST        | `/api/players`         | { name, img, tournamentId }  | 200            | 404          | add player                                                                                                                      |
-| PUT         | `/api/players/:id`     | { name, img }                | 201            | 400          | edit player                                                                                                                     |
-| DELETE      | `/api/players/:id`     |                              | 200            | 400          | delete player                                                                                                                   |
-| GET         | `/api/games`           |                              | 201            | 400          | show games                                                                                                                      |
-| GET         | `/api/games/:id`       |                              |                |              | show specific game                                                                                                              |
-| POST        | `/api/games`           | {player1,player2,winner,img} |                |              | add game                                                                                                                        |
-| PUT         | `/api/games/:id`       | {winner,score}               |                |              | edit game                                                                                                                       |
+| HTTP Method | URL                              | Request Body                                                                         | Success status | Error Status | Description                                                                                                                     |
+| ----------- | -------------------------------- | ------------------------------------------------------------------------------------ | -------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| GET         | `/auth/profile `                 | Saved session                                                                        | 200            | 404          | Check if user is logged in and return profile page                                                                              |
+| GET         | `/auth/profile/:userId/edit `    | Saved session                                                                        | 200            | 404          | Edit profile page                                                                                                               |
+| POST        | `/auth/profile/:userId/edit `    | {name, imageProfile}                                                                 | 200            | 404          | Updates user profile                                                                                                            |
+| POST        | `/auth/signup`                   | {name, email, password}                                                              | 201            | 404          | Checks if fields not empty (422) and user not exists (409), then create user with encrypted password, and store user in session |
+| POST        | `/auth/login`                    | {email, password}                                                                    | 200            | 401          | Checks if fields not empty (422), if email exists (404), and if password matches (404), then stores user in session             |
+| POST        | `/auth/logout`                   |                                                                                      | 204            | 400          | Logs out the user                                                                                                               |
+| GET         | `/api/restaurants`               |                                                                                      |                | 400          | Show all restaurants                                                                                                            |
+| GET         | `/api/restaurants/:restaurantId` |                                                                                      |                |              | Show specific restaurants                                                                                                       |
+| POST        | `/api/restaurants`               | { name, imageCover, city, contact, address, comments, averagePrice, imageUrl }       | 201            | 400          | Create and save a new restaurant                                                                                                |
+| PUT         | `/api/restaurants/:restaurantId` | { name, imageCover, city, contact, address, comments:[], averagePrice, imageUrl:[] } | 200            | 400          | edit a restaurant                                                                                                               |
+| DELETE      | `/api/restaurants/:restaurantId` |                                                                                      | 201            | 400          | delete a restaurant                                                                                                             |
+
+|
 
 <br>
 
