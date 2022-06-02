@@ -19,6 +19,8 @@ require("./config")(app);
 const allRoutes = require("./routes/index.routes");
 app.use("/api", allRoutes);
 
+const authRoutes = require("./routes/auth.routes");
+app.use("/api", authRoutes);
 
 const restaurantRouter = require("./routes/restaurant.routes");
 app.use("/api", restaurantRouter);

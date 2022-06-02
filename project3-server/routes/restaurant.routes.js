@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const User = require("../models/User.model");
 const Comment = require("../models/Comment.model");
+const Restaurant = require("../models/Restaurant.model");
 
 //If user.role === "admin"
 router.post("/restaurants", (req, res, next) => {
@@ -10,9 +11,7 @@ router.post("/restaurants", (req, res, next) => {
     city,
     contact,
     address,
-    comments,
     averagePrice,
-    imageUrl,
   } = req.body;
 
   Restaurant.create({
@@ -31,7 +30,7 @@ router.post("/restaurants", (req, res, next) => {
 router.put("/restaurants/:restaurantId", (req, res, next) => {
   const { restaurantId } = req.params;
 
-  Project.findByIdAndUpdate(restaurantId, req.body, { new: true })
+  Restaurant.findByIdAndUpdate(restaurantId, req.body, { new: true })
 
     .then((response) => res.json(response))
     .catch((err) => res.json(err));
@@ -40,7 +39,7 @@ router.put("/restaurants/:restaurantId", (req, res, next) => {
 router.delete("/restaurants/:restaurantId", (req, res, next) => {
   const { restaurantId } = req.params;
 
-  Project.findByIdAndRemove(restaurantId)
+  Restaurant.findByIdAndRemove(restaurantId)
 
     .then((response) => res.json(response))
     .catch((err) => res.json(err));
