@@ -11,7 +11,7 @@ const userSchema = new Schema({
   name: { type: String, required: [true, "Please enter a name"] },
   role: { type: String, enum: ["admin", "user"], default: "user" },
   favourites: [{ type: Schema.Types.ObjectId, ref: "Restaurant" }],
-  comment: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
 });
 
 const User = model("User", userSchema);

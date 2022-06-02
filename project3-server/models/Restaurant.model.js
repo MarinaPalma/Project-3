@@ -6,9 +6,8 @@ const restaurantSchema = new Schema({
   city: { type: String, required: true },
   contact: { type: Number },
   address: { type: String, required: true },
-  comment: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   averagePrice: { type: Number },
-  imageUrl: [{ type: String }],
   location: {
     address: String,
     geo: {

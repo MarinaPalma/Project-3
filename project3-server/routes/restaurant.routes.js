@@ -1,0 +1,67 @@
+const router = require("express").Router();
+const User = require("../models/User.model");
+const Comment = require("../models/Comment.model");
+
+//If user.role === "admin"
+router.post("/restaurants", (req, res, next) => {
+  const {
+    name,
+    imageCover,
+    city,
+    contact,
+    address,
+    comments,
+    averagePrice,
+    imageUrl,
+  } = req.body;
+
+  Restaurant.create({
+    name,
+    imageCover,
+    city,
+    contact,
+    address,
+    comments: [],
+    averagePrice,
+  })
+    .then((response) => res.json(response))
+    .catch((err) => res.json(err));
+});
+
+router.put("/restaurants/:restaurantId", (req, res, next) => {
+  const { restaurantId } = req.params;
+
+  Project.findByIdAndUpdate(restaurantId, req.body, { new: true })
+
+    .then((response) => res.json(response))
+    .catch((err) => res.json(err));
+});
+
+router.delete("/restaurants/:restaurantId", (req, res, next) => {
+  const { restaurantId } = req.params;
+
+  Project.findByIdAndRemove(restaurantId)
+
+    .then((response) => res.json(response))
+    .catch((err) => res.json(err));
+});
+
+//If user.role === "user" and admin
+router.get("/restaurants", (req, res, next) => {
+  Restaurant.find()
+    .populate("comments")
+    .then((allRestaurants) => res.json(allRestaurants))
+    .catch((err) => res.json(err));
+});
+
+router.get("/restaurants/:restaurantId", (req, res, next) => {
+  const { restaurantId } = req.params;
+
+  Restaurant.findById(restaurantId)
+    .populate("comments")
+    .then((response) => res.json(response))
+    .catch((err) => res.json(err));
+});
+
+
+module.exports = router;

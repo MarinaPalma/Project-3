@@ -19,11 +19,15 @@ require("./config")(app);
 const allRoutes = require("./routes/index.routes");
 app.use("/api", allRoutes);
 
-app.use("/api", allRoutes);
+
 const restaurantRouter = require("./routes/restaurant.routes");
 app.use("/api", restaurantRouter);
+
 const userRouter = require("./routes/user.routes");
 app.use("/api", userRouter);
+
+const commentRouter = require("./routes/comment.routes");
+app.use("/api", commentRouter);
 
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app);
