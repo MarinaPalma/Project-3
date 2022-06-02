@@ -29,6 +29,8 @@ router.put('/restaurants/comments/:commentId', (req, res, next) => {
     .catch((err) => res.json(err));
 });
 
+
+
 router.delete('/restaurants/comments/:commentId', (req, res, next) => {
     const { commentId } = req.params;
    let deletedComment;
@@ -46,5 +48,8 @@ router.delete('/restaurants/comments/:commentId', (req, res, next) => {
 
   });
 
+
+
+  //no frontend comparar se o cuurentuser is equal to the userid that made the post
 
 module.exports = router;
