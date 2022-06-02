@@ -27,6 +27,9 @@ router.post("/restaurants", (req, res, next) => {
     .catch((err) => res.json(err));
 });
 
+
+//req.body tem de ter os mm nomes
+
 router.put("/restaurants/:restaurantId", (req, res, next) => {
   const { restaurantId } = req.params;
 

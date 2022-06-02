@@ -7,6 +7,8 @@ router.get("/profile/:userId", (req, res, next) => {
     const { userId } = req.params;
   
     User.findById(userId)
+    .populate("favourites")
+    .populate("comments")
     .then((response) => 
       res.json(response))
     .catch((err) => res.json(err))
