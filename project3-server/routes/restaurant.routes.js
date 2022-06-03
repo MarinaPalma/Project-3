@@ -52,6 +52,7 @@ router.delete("/restaurants/:restaurantId", (req, res, next) => {
 router.get("/restaurants", (req, res, next) => {
   Restaurant.find()
     .populate("comments")
+
     .then((allRestaurants) => res.json(allRestaurants))
     .catch((err) => res.json(err));
 });

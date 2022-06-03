@@ -5,7 +5,7 @@ const Restaurant = require('../models/Restaurant.model');
 const Comment = require("../models/Comment.model")
 
 router.post('/restaurants/comments', (req, res, next) => {
-  const { author, restaurant, content, imageUrl } = req.body;
+  const { author, restaurant, content, imageUrl} = req.body;
 
   let newComment;
 
@@ -32,6 +32,7 @@ router.put('/restaurants/comments/:commentId', (req, res, next) => {
     return
   } else {
     Comment.findByIdAndUpdate(commentId, req.body, { new: true })
+
     .then((response) => res.json(response))
   }
 })
@@ -47,6 +48,7 @@ router.delete('/restaurants/comments/:commentId', (req, res, next) => {
    let deletedComment;
 
 Comment.findById(commentId)
+
 .then((foundComment)=>{
   if(foundComment.author != _id) {
     res.status(403).json({errorMessage: "You don´t have permisson"})
@@ -67,7 +69,5 @@ Comment.findById(commentId)
   });
 
 
-
-  //no frontend comparar se o cuurentuser is equal to the userid that made the post
 
 module.exports = router;
