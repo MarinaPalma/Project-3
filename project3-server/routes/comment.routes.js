@@ -23,19 +23,36 @@ router.post('/restaurants/comments', (req, res, next) => {
 
 router.put('/restaurants/comments/:commentId', (req, res, next) => {
     const { commentId } = req.params;
-  
+    const {_id} = req.payload;
+
+  Comment.findById(commentId)
+  .then((foundComment)=>{
+  if(foundComment.author != _id) {
+    res.status(403).json({errorMessage: "You don´t have permisson"})
+    return
+  } else {
     Comment.findByIdAndUpdate(commentId, req.body, { new: true })
     .then((response) => res.json(response))
-    .catch((err) => res.json(err));
+  }
+})
+.catch((err) => res.json(err));
+
 });
 
 
 
 router.delete('/restaurants/comments/:commentId', (req, res, next) => {
     const { commentId } = req.params;
+    const {_id} = req.payload;
    let deletedComment;
-  
-    Comment.findByIdAndRemove(commentId)
+
+Comment.findById(commentId)
+.then((foundComment)=>{
+  if(foundComment.author != _id) {
+    res.status(403).json({errorMessage: "You don´t have permisson"})
+    return
+  } else {
+     Comment.findByIdAndRemove(commentId)
       .then((comment) => {
         deletedComment = comment;
         return Restaurant.findByIdAndUpdate(deletedComment.restaurant, { $pull: { comments: commentId} }, { new: true });
@@ -43,9 +60,10 @@ router.delete('/restaurants/comments/:commentId', (req, res, next) => {
       .then(() => {
         return User.findByIdAndUpdate(deletedComment.author, { $pull: { comments: commentId} }, { new: true });
       })
-      .then((response) => res.json(response))
-      .catch((err) => res.json(err));
-
+      .then((response) => res.json(response))  
+  }
+})
+.catch((err) => res.json(err));
   });
 
 
