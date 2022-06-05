@@ -2,11 +2,16 @@ import React, { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../context/auth.context";
 import axios from "axios";
 import Navbar from "../components/Navbar";
-import { Link } from 'react-router-dom';
+import { Link, useParams, useNavigate} from 'react-router-dom';
 import UpdateComment from "../components/UpdateComment";
 
 function ProfilePage() {
   const { user } = useContext(AuthContext);
+
+
+//   const { commentId } = useParams();
+
+  const navigate = useNavigate();
 
   const [currentUser, setCurrentUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -14,6 +19,8 @@ function ProfilePage() {
 
 const [showComments, setShowComments] = useState(false)
 const [showEdit, setShowEdit] = useState(false)
+
+
 
 const toggleShow = () =>{
 setShowComments(!showComments)
@@ -23,6 +30,9 @@ const toggleEdit = () =>{
    
     setShowEdit(!showEdit)
     }
+
+
+
 
 
   const getUser = async () => {
@@ -51,21 +61,45 @@ const toggleEdit = () =>{
     getUser();
   }, [user]);
 
+
+
+//   const deleteComment = async () =>{
+//     try {
+//         const getToken = localStorage.getItem("authToken");
+//          await axios.delete( `${process.env.REACT_APP_BASE_API_URL}/restaurants/comments/${user.comments._id}`,
+//         {
+//           headers: {
+//             Authorization: `Bearer ${getToken}`,
+//           },
+//         });
+//         navigate('/profile');
+//       } catch (error) {
+//         console.log(error);
+//       } 
+// };
+
+// useEffect(() => {
+//     deleteComment();
+//   }, []);
+
+
   return (
       <>
       <Navbar/>
     <div>
       {user && (
         <>
+    <h1>Hello {user.name}</h1>
+
           <img src={user.imageProfile} alt="profile" />
-          <h1>{user.name}</h1>
+          <h3>{user.name}</h3>
           <p>{user.email}</p>
         </>
       )}
 
 {user && user.role ==="user" &&(
   <>
-    <h3>Favourites</h3>
+    <h3>Favourites </h3>
 
 
   {currentUser &&
@@ -78,12 +112,12 @@ const toggleEdit = () =>{
         );
       })}
 
-  {currentUser && !currentUser.favourites.length && <p>No favourites yet</p>
+  {currentUser && !currentUser.favourites.length && <p>No favourites yet! Go and adventure yourself in the tasty world of tascas</p>
       }
 
 
     <h3>Reviews</h3>
-    <button onClick={toggleShow}>{showComments ? 'Show' : 'Hide'}</button>
+    <button onClick={toggleShow}>{showComments ? 'Hide' : 'Show'}</button>
 
     {showComments && currentUser &&
     
@@ -94,17 +128,21 @@ const toggleEdit = () =>{
             <p>{comment.content}</p>
             <button onClick= {toggleEdit}>Edit comment</button>
             {showEdit && <UpdateComment/>}
-            <button>Delete comment</button>
+            {/* <button onClick={deleteComment}>Delete comment</button> */}
           </div>
         );
       })}
+
+      {currentUser && !currentUser.comments.length && <p>No reviews yet! Help other by commenting the tascas you went to </p>
+      }
+
       </>
       )}
 
       {user && user.role ==="admin" &&(
           <>
           <Link to="/restaurants/add"><button type="submit">Add a new Taska</button></Link>
-          <Link to="/restaurants/edit/"><button type="submit">Edit a Taska</button></Link>
+          <Link to="/restaurants"><button type="submit">Edit a Taska</button></Link>
           </>
       )}
 

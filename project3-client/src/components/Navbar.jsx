@@ -19,7 +19,7 @@ function Navbar() {
           <Link to="/">
           <button onClick={logoutUser}>Logout</button>
           </Link>
-          <p>Hello {user.name}</p>
+
         </>
       )}
 

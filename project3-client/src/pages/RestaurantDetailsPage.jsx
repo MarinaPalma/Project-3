@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import axios from 'axios';
 import { Link, useParams } from 'react-router-dom';
 import AddComment from '../components/AddComment';
 import UpdateComment from '../components/UpdateComment';
 import AddFavouriteBtn from '../components/AddFavouriteBtn';
+import { AuthContext } from "../context/auth.context";
+import Navbar from '../components/Navbar';
 
 function RestaurantDetailsPage() {
 
 const [restaurant, setRestaurant] = useState(null)
 const {restaurantId} = useParams();
-
+const { user } = useContext(AuthContext);
 
 const getRestaurant = async () => {
 
@@ -41,10 +43,11 @@ useEffect(() => {
   return (
     
     <div>
+    <Navbar/>
     <h1>Restaurant details</h1>
-
+    {user && user.role ==="user" &&(
     <AddFavouriteBtn restaurantId={restaurantId}/>
-
+    )}
   {restaurant && (
 <>
   <h2>{restaurant.name}</h2>
@@ -55,14 +58,18 @@ useEffect(() => {
   <p>{restaurant.averagePrice}€</p>
 
   <Link to="???"><button>Write a review</button></Link>
+{/*   
+Faz se assim as props? */}
+
+  <AddComment refreshRestaurant={getRestaurant} restaurantId={restaurantId} /> 
 </>
     )}
 
-    <div style={{"width": "10px"}}>
+    <div >
  {restaurant && (
    restaurant.comments.map((comment)=> {
      return (
-      <div width ="10px" key={comment._id}>
+      <div key={comment._id}>
               <h3>{comment.author}</h3>
               <p>{comment.createdAt}</p>
               <h4>Description:</h4>

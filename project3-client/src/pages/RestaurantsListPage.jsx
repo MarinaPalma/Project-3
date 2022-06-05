@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Navbar from '../components/Navbar';
+import { AuthContext } from "../context/auth.context";
 
 function RestaurantsListPage() {
+  const { user } = useContext(AuthContext);
   const [restaurants, setRestaurants] = useState([])
 
 
@@ -35,7 +38,8 @@ useEffect(() => {
 
   return (
 
-    <div className="ProjectListPage">
+    <div>
+     <Navbar/>
     <h1>Restaurants</h1>
    
     {restaurants.map((restaurant) => {
@@ -46,6 +50,9 @@ useEffect(() => {
           <Link to={`/restaurants/${restaurant._id}`}>
             <button type='submit'>See Details</button>
           </Link>
+          {user && user.role ==="admin" &&(      
+          <Link to={`/restaurants/edit/${restaurant._id}`}><button type="submit">Edit</button></Link>
+          )}
         </div>
       );
     })}
@@ -55,15 +62,5 @@ useEffect(() => {
 
 
 
-
-
-//     <div>
-//     <h1>Restaurants</h1>
-
-
-
-//     </div>
-//   )
-// }
 
 export default RestaurantsListPage
