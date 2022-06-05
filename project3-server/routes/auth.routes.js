@@ -114,9 +114,9 @@ router.post('/login', (req, res, next) => {
           return res.status(400).json({ errorMessage: 'Wrong credentials.' });
         }
 
-        const { _id, email, city, imageProfile, name, role} = user; //POR AQUI O QUE QUERO QUE APAREÇA NO PERFIL
+        const { _id, email, city, imageProfile, name, role, comments} = user; //POR AQUI O QUE QUERO QUE APAREÇA NO PERFIL
 
-        const payload = { _id, email, city, imageProfile, name, role};//POR AQUI O QUE QUERO QUE APAREÇA NO PERFIL
+        const payload = { _id, email, city, imageProfile, name, role, comments};//POR AQUI O QUE QUERO QUE APAREÇA NO PERFIL
 
 
         const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {

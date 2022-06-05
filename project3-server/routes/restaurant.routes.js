@@ -11,6 +11,7 @@ router.post("/restaurants", (req, res, next) => {
     city,
     contact,
     address,
+    // comments,?
     averagePrice,
   } = req.body;
 
@@ -20,13 +21,12 @@ router.post("/restaurants", (req, res, next) => {
     city,
     contact,
     address,
-    comments: [],
+    // comments,? ou []?
     averagePrice,
   })
     .then((response) => res.json(response))
     .catch((err) => res.json(err));
 });
-
 
 //req.body tem de ter os mm nomes
 
@@ -65,6 +65,5 @@ router.get("/restaurants/:restaurantId", (req, res, next) => {
     .then((response) => res.json(response))
     .catch((err) => res.json(err));
 });
-
 
 module.exports = router;
